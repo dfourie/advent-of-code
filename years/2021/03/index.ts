@@ -1,4 +1,4 @@
-import _ from "lodash";
+import _, {  } from "lodash";
 import * as util from "../../../util/util";
 import * as test from "../../../util/test";
 import chalk from "chalk";
@@ -13,17 +13,83 @@ const DAY = 3;
 // problem url  : https://adventofcode.com/2021/day/3
 
 async function p2021day3_part1(input: string, ...params: any[]) {
-	
-	return "Not implemented";
+	// Chnage input into matrix of numbers
+	const nums = input.split("\n").map(value => value.trim().split("").map(Number));
+	const length = nums.length / 2;
+	// Reduce each row by summing its corresponding values, then reduce to binary
+	const gamma = nums
+		.reduceRight((prev, current) => {
+			prev.forEach((val, i) => {
+				current[i] = current[i] + val;
+			});
+			return current;
+		})
+		.map(value => (value > length ? 1 : 0));
+	const epsilon = gamma.map(value => (value === 1 ? 0 : 1));
+
+	const decGamma = parseInt(gamma.join(""), 2);
+	const decEpsilon = parseInt(epsilon.join(""), 2);
+
+	return decGamma * decEpsilon;
+}
+/**
+ *
+ * @param array The array of numbers
+ * @param pos the position to filter on
+ * @param gt whether to use most common or least common
+ */
+async function filterArray(array: number[][], pos: number, gt: boolean) {
+	let length = (array.length) / 2.0;
+	// length = gt ? Math.ceil(length) : Math.floor(length);
+
+	const sum = array.map(value => value[pos]).reduce((a, b) => a + b);
+	// log("sum is", sum)
+	// log("length is", length)
+	let filterVal = sum >= length ? 1 : 0;
+
+	filterVal=gt?filterVal:filterVal===1?0:1;
+	const newArray= array.filter((value)=>value[pos]===filterVal)
+	return newArray
 }
 
 async function p2021day3_part2(input: string, ...params: any[]) {
-	return "Not implemented";
+	// Chnage input into matrix of numbers
+	const nums = input.split("\n").map(value => value.trim().split("").map(Number));
+	let pos=0;
+	let o2Copy=[...nums]
+	while(o2Copy.length>1)
+	{
+		o2Copy = await filterArray(o2Copy,pos,true);
+		pos++
+	}
+	const o2=parseInt(o2Copy[0].join(""),2)
+
+	pos=0;
+	o2Copy=[...nums]
+	while(o2Copy.length>1)
+	{
+		o2Copy = await filterArray(o2Copy,pos,false);
+		pos++;
+	}
+	const co2=parseInt(o2Copy[0].join(""),2)
+
+	return o2*co2;
 }
 
 async function run() {
-	const part1tests: TestCase[] = [];
-	const part2tests: TestCase[] = [];
+	const part1tests: TestCase[] = [{
+		input: "00100\n11110\n10110\n10111\n10101\n01111\n00111\n11100\n10000\n11001\n00010\n01010",
+		expected: "198",
+	},];
+	const part2tests: TestCase[] = [
+		{
+			input: "00100\n11110\n10110\n10111\n10101\n01111\n00111\n11100\n10000\n11001\n00010\n01010",
+			expected: "230",
+		},
+		// { input: "1\n1\n0\n0",expected:"1"},
+		// { input: "1\n1\n0\n0\n1",expected:"1"},
+		// { input: "1\n1\n0\n0\n0",expected:"0"},
+	];
 
 	// Run tests
 	test.beginTests();
@@ -46,7 +112,7 @@ async function run() {
 	const part1Solution = String(await p2021day3_part1(input));
 	const part1After = performance.now();
 
-	const part2Before = performance.now()
+	const part2Before = performance.now();
 	const part2Solution = String(await p2021day3_part2(input));
 	const part2After = performance.now();
 
