@@ -10,7 +10,7 @@ let help = false;
 let noTests = false;
 let year: number = 0;
 let day: number = 0;
-let sample=false;
+
 
 const args = process.argv.slice(2);
 // Loop through all arguments and process
@@ -22,10 +22,7 @@ for (const arg of args) {
 	} else if (arg.trim() === "--no-test" || arg.trim() === "--no-tests" || arg.trim() === "-n") {
 		noTests = true;
 	} 
-	else if(arg.trim()==="--sample")
-	{
-		sample=true;
-	}
+	
 	else {
 		const num = Number(arg);
 		if (Number.isInteger(num)) {
@@ -52,7 +49,7 @@ if (help) {
 
 LOGUTIL.setDebug(debug);
 TESTUTIL.setNoTests(noTests);
-util.useSample(sample);
+
 
 if (year === 0 && day === 0) {
 	({ year, day } = util.getLatestPuzzleDate());

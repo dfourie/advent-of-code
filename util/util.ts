@@ -5,16 +5,7 @@ import { existsSync } from "fs";
 import { fileURLToPath } from "url";
 
 
-let FILENAME="data";
 
-
-export function useSample(value: boolean) {
-	if(value)
-	{
-		FILENAME = "sample";
-	}
-	
-}
 
 
 /**
@@ -131,10 +122,11 @@ export function getProblemUrl(day: number, year: number) {
 	return `https://adventofcode.com/${year}/day/${day}`;
 }
 
-export async function getInput(day: number, year: number, rootDir = path.join(getAppRoot(), "years")) {
+export async function getInput(day: number, year: number, rootDir = path.join(getAppRoot(), "years"),filename="data") {
 	const dayRoot = getDayRoot(day, year, rootDir);
-	return fs.readFile(path.join(dayRoot, `${FILENAME}.txt`), "utf-8");
+	return fs.readFile(path.join(dayRoot, `${filename}.txt`), "utf-8");
 }
+
 
 export function clamp(val: number, min: number, max: number) {
 	return Math.max(Math.min(val, max), min);
