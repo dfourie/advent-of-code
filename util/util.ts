@@ -4,6 +4,19 @@ import crypto from "crypto";
 import { existsSync } from "fs";
 import { fileURLToPath } from "url";
 
+
+let FILENAME="data";
+
+
+export function useSample(value: boolean) {
+	if(value)
+	{
+		FILENAME = "sample";
+	}
+	
+}
+
+
 /**
  * Helper to run multiple search-and-replace operations within a string.
  * @param corpus Body of text in which to make replacements
@@ -120,7 +133,7 @@ export function getProblemUrl(day: number, year: number) {
 
 export async function getInput(day: number, year: number, rootDir = path.join(getAppRoot(), "years")) {
 	const dayRoot = getDayRoot(day, year, rootDir);
-	return fs.readFile(path.join(dayRoot, "data.txt"), "utf-8");
+	return fs.readFile(path.join(dayRoot, `${FILENAME}.txt`), "utf-8");
 }
 
 export function clamp(val: number, min: number, max: number) {
