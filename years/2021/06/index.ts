@@ -111,7 +111,7 @@ function fastFishTransform(input: string, days: number) {
 }
 
 async function p2021day6_part1(input: string, ...params: any[]) {
-	return calculate_fish(input, 80);
+	return fastFishTransform(input, 80);
 }
 
 async function p2021day6_part2(input: string, ...params: any[]) {
