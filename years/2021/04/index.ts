@@ -19,7 +19,7 @@ class Board {
 	found_rows: number[] = [0, 0, 0, 0, 0];
 	// this records the number of columns
 	found_cols: number[] = [0, 0, 0, 0, 0];
-
+	// This i
 	pretty: number[][] = [
 		[-1, -1, -1, -1, -1],
 		[-1, -1, -1, -1, -1],
