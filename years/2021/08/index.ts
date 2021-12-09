@@ -108,9 +108,6 @@ async function p2021day8_part2(input: string, ...params: any[]) {
 	const displays = parseInput(input);
 	let sum = 0;
 	displays.forEach(([signal, output]) => {
-		// Define a decoder dict for the display
-		const decoder: Record<string, number> = {};
-
 		const encoder: Record<number, string> = {};
 		// Map a character to potencial segments. When there is only one segment per character, the problem is solved.
 		const segments: Record<string, Set<TSegment>> = {};
@@ -147,7 +144,6 @@ async function p2021day8_part2(input: string, ...params: any[]) {
 			switch (value.length) {
 				// For digit 1
 				case 2:
-					decoder[value] = 1;
 					encoder[1] = value;
 					value.split("").forEach(value => {
 						segments[value] = intersection(segments[value], digitLookup[1]);
@@ -155,7 +151,6 @@ async function p2021day8_part2(input: string, ...params: any[]) {
 					break;
 				// for digit 4
 				case 4:
-					decoder[value] = 4;
 					encoder[4] = value;
 					value.split("").forEach(value => {
 						segments[value] = intersection(segments[value], digitLookup[4]);
@@ -163,7 +158,6 @@ async function p2021day8_part2(input: string, ...params: any[]) {
 					break;
 				//for digit 7
 				case 3:
-					decoder[value] = 7;
 					encoder[7] = value;
 					value.split("").forEach(value => {
 						segments[value] = intersection(segments[value], digitLookup[4]);
@@ -173,7 +167,6 @@ async function p2021day8_part2(input: string, ...params: any[]) {
 					break;
 				// for digit 8
 				case 7:
-					decoder[value] = 8;
 					encoder[8] = value;
 					// No point in intersecting it here as 8 already has the max segments
 					break;
@@ -203,8 +196,6 @@ async function p2021day8_part2(input: string, ...params: any[]) {
 			segments[value] = difference(segments[value], length6Intersection);
 		});
 		RemoveAllSubsets();
-
-		// Reverse
 
 		// Construct digits for each value in the output
 
