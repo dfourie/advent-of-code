@@ -1,6 +1,6 @@
 import * as util from "./util";
 import _ from "lodash";
-import chalk from "chalk";
+import chalk, { Chalk } from "chalk";
 
 /**
  * Options for initializing a Grid
@@ -150,7 +150,7 @@ export const Dir: Obj<GridPos> = {
 	SW: [1, -1],
 	NW: [-1, -1],
 };
-
+type tSigilStat = { colorIndex: number; count: number };
 /**
  * Character-based Grid data structure. Grids have finite size.
  * Each cell is expected to be a single printable character.
@@ -160,9 +160,11 @@ export class Grid {
 	private numCols: number;
 	private grid: string[][] = [];
 	private nextColor = 0;
-	private sigilStats: { [sigil: string]: { colorIndex: number; count: number } } = {};
+	private sigilStats: { [sigil: string]: tSigilStat } = {};
 	private batchUpdatedGrid: Grid | undefined;
 	private fillWith: string | undefined;
+
+	private customSigilFunction?: (sigil: string) => chalk.Chalk;
 
 	constructor(options: GridOptions) {
 		if ((!options.rowCount || !options.colCount) && !options.serialized) {
@@ -230,12 +232,19 @@ export class Grid {
 			}
 		}
 	}
+	public setCustomSigilFunction(customSigilFunction: (sigil: string) => Chalk) {
+		this.customSigilFunction = customSigilFunction;
+	}
 
 	private getSigilColor(sigil: string) {
 		if (sigil === ".") {
 			return chalk.gray;
 		} else {
-			return colorOrder[this.sigilStats[sigil].colorIndex];
+			if (this.customSigilFunction) {
+				return this.customSigilFunction(sigil);
+			} else {
+				return colorOrder[this.sigilStats[sigil].colorIndex];
+			}
 		}
 	}
 
@@ -418,19 +427,22 @@ export class Grid {
 	 */
 	public simulateCellularAutomata(
 		iterations: number | ((grid: Grid, changesSinceLastIteration: boolean) => boolean),
-		getNewCellValue: (cell: Cell, grid: Grid) => string | undefined
+		getNewCellValue: (cell: Cell, grid: Grid) => string | undefined,
+		noBatched?: boolean
 	) {
 		let changes = true;
 		for (let i = 0; typeof iterations === "number" ? i < iterations : iterations(this, changes); ++i) {
 			this.batchUpdates();
+
 			changes = false;
 			for (const cell of this) {
 				const newValue = getNewCellValue(cell, this);
 				if (newValue && newValue !== cell.value) {
-					cell.setValue(newValue);
+					cell.setValue(newValue, noBatched);
 					changes = true;
 				}
 			}
+
 			this.commit();
 		}
 	}
@@ -720,8 +732,8 @@ export class Cell {
 	 * Set the value of this cell (calls to parent grid)
 	 * @param val Single-character string value to set
 	 */
-	public setValue(val: string) {
-		this.grid.setCell(this.pos, val);
+	public setValue(val: string, ignoreBatch?: boolean) {
+		this.grid.setCell(this.pos, val, ignoreBatch);
 	}
 
 	/**
