@@ -14,11 +14,11 @@ function getCoords(position: string) {
 // solution path: /Users/david/Workspace/advent-of-code/advent-of-code/years/2021/13/index.ts
 // data path    : /Users/david/Workspace/advent-of-code/advent-of-code/years/2021/13/data.txt
 // problem url  : https://adventofcode.com/2021/day/13
-function coordsToArray(coords: Set<string>, char = ".", char2 = "#") {
+function coordsToArray(coords: Set<coordTuple>, char = ".", char2 = "#") {
 	let x_max = 0;
 	let y_max = 0;
-	const coordMap = Array.from(coords.values()).map(val => getCoords(val));
-	coordMap.forEach(coord => {
+
+	coords.forEach(coord => {
 		if (coord[0] > x_max) {
 			x_max = coord[0];
 		}
@@ -27,39 +27,43 @@ function coordsToArray(coords: Set<string>, char = ".", char2 = "#") {
 		}
 	});
 	const output: string[][] = new Array(y_max + 1).fill(false).map(() => new Array(x_max + 1).fill(char));
-	coordMap.forEach(coord => {
+	coords.forEach(coord => {
 		output[coord[1]][coord[0]] = char2;
 	});
 	const outputLines = output.map(xs => `${xs.join("")}`).join("\n");
 	return outputLines;
 }
+type coordTuple = [number, number];
 async function p2021day13_part1(input: string, ...params: any[]) {
 	const lines = input.split("\n");
 	const space = lines.indexOf("");
-	const coords = new Set(lines.slice(0, space));
+	const coords = new Set(
+		lines.slice(0, space).map((val): coordTuple => {
+			const coords = getCoords(val);
+			return [coords[0], coords[1]];
+		})
+	);
 	const folds = lines.slice(space + 1).map(fold => fold.split(" ")[2].split("="));
 
 	function fold(direction: "x" | "y", position: string) {
-		const newVals = new Set<string>();
-		const removeVals = new Set<string>();
+		const newVals = new Set<coordTuple>();
+		const removeVals = new Set<coordTuple>();
 		const intPosition = parseInt(position);
 		if (direction === "y") {
-			coords.forEach(coordString => {
-				const coord = getCoords(coordString);
+			coords.forEach(coord => {
 				if (coord[1] > intPosition) {
-					removeVals.add(coordString);
+					removeVals.add(coord);
 					const newYcoordinate = intPosition - (coord[1] - intPosition);
-					newVals.add(`${coord[0]},${newYcoordinate}`);
+					newVals.add([coord[0], newYcoordinate]);
 				}
 			});
 		}
 		if (direction === "x") {
-			coords.forEach(coordString => {
-				const coord = getCoords(coordString);
+			coords.forEach(coord => {
 				if (coord[0] > intPosition) {
-					removeVals.add(coordString);
+					removeVals.add(coord);
 					const newXcoordinate = intPosition - (coord[0] - intPosition);
-					newVals.add(`${newXcoordinate},${coord[1]}`);
+					newVals.add([newXcoordinate, coord[1]]);
 				}
 			});
 		}
@@ -83,30 +87,33 @@ async function p2021day13_part1(input: string, ...params: any[]) {
 async function p2021day13_part2(input: string, ...params: any[]) {
 	const lines = input.split("\n");
 	const space = lines.indexOf("");
-	const coords = new Set(lines.slice(0, space));
+	const coords = new Set(
+		lines.slice(0, space).map((val): coordTuple => {
+			const coords = getCoords(val);
+			return [coords[0], coords[1]];
+		})
+	);
 	const folds = lines.slice(space + 1).map(fold => fold.split(" ")[2].split("="));
 
 	function fold(direction: "x" | "y", position: string) {
-		const newVals = new Set<string>();
-		const removeVals = new Set<string>();
+		const newVals = new Set<coordTuple>();
+		const removeVals = new Set<coordTuple>();
 		const intPosition = parseInt(position);
 		if (direction === "y") {
-			coords.forEach(coordString => {
-				const coord = getCoords(coordString);
+			coords.forEach(coord => {
 				if (coord[1] > intPosition) {
-					removeVals.add(coordString);
+					removeVals.add(coord);
 					const newYcoordinate = intPosition - (coord[1] - intPosition);
-					newVals.add(`${coord[0]},${newYcoordinate}`);
+					newVals.add([coord[0], newYcoordinate]);
 				}
 			});
 		}
 		if (direction === "x") {
-			coords.forEach(coordString => {
-				const coord = getCoords(coordString);
+			coords.forEach(coord => {
 				if (coord[0] > intPosition) {
-					removeVals.add(coordString);
+					removeVals.add(coord);
 					const newXcoordinate = intPosition - (coord[0] - intPosition);
-					newVals.add(`${newXcoordinate},${coord[1]}`);
+					newVals.add([newXcoordinate, coord[1]]);
 				}
 			});
 		}
