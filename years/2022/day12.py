@@ -13,7 +13,6 @@ puzzle = Puzzle(year=2022, day=12)
 # data = [list(l) for l in puzzle.example_data.split("\n")]
 data = [list(l) for l in puzzle.input_data.split("\n")]
 
-print_data = copy.deepcopy(data)
 # Find start and end locations
 start = (0, 0)
 end = (0, 0)
@@ -28,9 +27,11 @@ for i, row in enumerate(data):
 
         if val == "S":
             start = (i, j)
+            # Convert to a normal height map
             data[i][j] = int(0)
         elif val == "E":
             end = (i, j)
+            # Convert to a normal height map
             data[i][j] = int(ord("z") - ord("a"))
         else:
             # Convert to sane map
@@ -76,42 +77,33 @@ def get_data(pos: coord):
     return data[pos[0]][pos[1]]
 
 
-def print_map(pos: coord):
-    for i, row in enumerate(print_data):
-        for j, val in enumerate(print_data):
-            if (i, j) == pos:
-                print("#", end="")
-            else:
-                print(val, end="")
-        print()
-
-
 def bfs(node: coord, go_up, end_condition: Callable):  # function for BFS
     visited = []  # List for visited nodes.
     queue = []  # Initialize a queue
 
     min_depth = 10000000
+    # Initialise visited nodes
     visited.append(node)
+    # initialise the queue of nodes we have to visit
     queue.append((node, 0))
 
     while queue:  # Creating loop to visit each node
 
+        # Get current position and depth
         current_pos, current_depth = queue.pop(0)
-        # print(f"At {current_pos} depth {current_depth}")
         neighbours = find_available_nodes(current_pos, go_up)
 
+        # Check for end condition
         if end_condition(current_pos):
+            # If we satisfy end condiion, check the depth to see if it is a minimum
             if current_depth < min_depth:
                 min_depth = current_depth
 
-            # print(f"End found! at {current_depth}")
-
+        # Get a list of unvisited neighbours
         unvisted_neighbors = list(filter(lambda n: n not in visited, neighbours))
-
         for neighbour in unvisted_neighbors:
-
-            # print(f"Visiting {neighbour} ")
             visited.append(neighbour)
+            # Every neighbour we visit, we increment the depth
             queue.append((neighbour, current_depth + 1))
 
     return min_depth
