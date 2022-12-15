@@ -421,6 +421,14 @@ docs = ["furo (>=2022.9.29)", "proselint (>=0.13)", "sphinx-autodoc-typehints (>
 test = ["appdirs (==1.4.4)", "pytest-cov (>=4)", "pytest-mock (>=3.10)", "pytest (>=7.2)"]
 
 [[package]]
+name = "polygon3"
+version = "3.0.9.1"
+description = "Polygon3 is a Python-3 package that handles polygonal shapes in 2D"
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "prompt-toolkit"
 version = "3.0.33"
 description = "Library for building powerful interactive command lines in Python"
@@ -686,7 +694,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "81b8d559790a25a5e195b8cd69e162609e131440d1db0b3cfc874ea3ffdefce1"
+content-hash = "13a1f153a62591d8d116f2568fd96398d77404d54b2d6847287f517ac7f9c67b"
 
 [metadata.files]
 advent-of-code-data = [
@@ -946,6 +954,9 @@ pickleshare = [
 platformdirs = [
     {file = "platformdirs-2.5.4-py3-none-any.whl", hash = "sha256:af0276409f9a02373d540bf8480021a048711d572745aef4b7842dad245eba10"},
     {file = "platformdirs-2.5.4.tar.gz", hash = "sha256:1006647646d80f16130f052404c6b901e80ee4ed6bef6792e1f238a8969106f7"},
+]
+polygon3 = [
+    {file = "Polygon3-3.0.9.1.tar.gz", hash = "sha256:2ddf8d06975f728d5b40786136c82e5b9d38a846bce236b7e6587bbd6a5e9b49"},
 ]
 prompt-toolkit = [
     {file = "prompt_toolkit-3.0.33-py3-none-any.whl", hash = "sha256:ced598b222f6f4029c0800cefaa6a17373fb580cd093223003475ce32805c35b"},

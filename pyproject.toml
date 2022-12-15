@@ -10,6 +10,7 @@ advent-of-code-data = "^1.2.2"
 black = "^22.10.0"
 parse = "^1.19.0"
 numpy = "^1.23.5"
+Polygon3 = "^3.0.9"
 
 [tool.poetry.dev-dependencies]
 ipykernel = "^6.18.3"
